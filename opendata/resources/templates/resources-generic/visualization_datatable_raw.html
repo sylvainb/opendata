@@ -1,0 +1,34 @@
+{% extends "resources-generic/resource_base.html" %}
+
+{% block visualization_resource %}
+{% with data=view.datatable_raw_data %}
+<div class="visualization_datatable_simple" style="{{ data.container_css_style }}">
+
+<table role="grid">
+  <thead>
+    <tr>
+      {% for c in data.columns %}
+      <th style="{{ c.css_style }}">
+        {% if c.description %}
+        <span data-tooltip aria-haspopup="true" class="has-tip tip-top radius" title="{{ c.description }}">{{ c.name }}</span>
+        {% else %}
+        <span>{{ c.name }}</span>
+        {% endif %}
+      </th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for line in data.data_list %}
+    <tr>
+      {% for value in line %}
+      <td>{{ value }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+</div>
+{% endwith %}
+{% endblock visualization_resource %}

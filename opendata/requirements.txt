@@ -1,0 +1,6 @@
+Django==1.7.1
+django-zurb-foundation==5.4.7
+pycurl==7.19.5
+Pygments==2.0.1
+django-cron==0.3.5
+matplotlib==1.4.2

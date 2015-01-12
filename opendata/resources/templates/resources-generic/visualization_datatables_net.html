@@ -1,0 +1,77 @@
+{% extends "resources-generic/resource_base.html" %}
+
+{% block css %}
+<link href="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/foundation/dataTables.foundation.css" rel="stylesheet"/>
+{% endblock css %}
+
+{% block body_js %}
+<script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/foundation/dataTables.foundation.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+
+    // Setup - add a text input to each footer cell
+    $('#datatable tfoot th').each( function () {
+        var title = $('#datatable thead th').eq( $(this).index() ).text();
+        $(this).html( '<input type="text" placeholder="Search '+$.trim(title)+'" />' );
+    } );
+
+    var table = $('#datatable').DataTable({
+        "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+    });
+
+    // Apply the search
+    table.columns().eq( 0 ).each( function ( colIdx ) {
+        $( 'input', table.column( colIdx ).footer() ).on( 'keyup change', function () {
+            table
+                .column( colIdx )
+                .search( this.value )
+                .draw();
+        } );
+    } );
+
+} );
+</script>
+{% endblock body_js %}
+
+{% block visualization_resource %}
+{% with data=view.datatables_net_data %}
+<div class="visualization_datatable_net" style="width: 100%">
+
+<table id="datatable" style="width: 100%">
+  <thead>
+    <tr>
+      {% for c in data.columns %}
+      <th style="{{ c.css_style }}">
+        {% if c.description %}
+        <span data-tooltip aria-haspopup="true" class="has-tip tip-top radius" title="{{ c.description }}">{{ c.name }}</span>
+        {% else %}
+        <span>{{ c.name }}</span>
+        {% endif %}
+      </th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tfoot>
+    <tr>
+      {% for c in data.columns %}
+      <th style="{{ c.css_style }}">
+        <span>{{ c.name }}</span>
+      </th>
+      {% endfor %}
+    </tr>
+  </tfoot>
+  <tbody>
+    {% for line in data.data_list %}
+    <tr>
+      {% for value in line %}
+      <td>{{ value }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+</div>
+{% endwith %}
+{% endblock visualization_resource %}

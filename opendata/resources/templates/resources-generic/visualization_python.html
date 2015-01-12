@@ -1,0 +1,14 @@
+{% extends "resources-generic/resource_base.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    <link href="{% static "css/pygments.css" %}" rel="stylesheet"/>
+{% endblock css %}
+
+{% block visualization_resource %}
+
+<div class="visualization_python">
+{{ view.json2python2html | safe }}
+</div>
+
+{% endblock visualization_resource %}

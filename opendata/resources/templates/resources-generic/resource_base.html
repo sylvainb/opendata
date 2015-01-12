@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block base_body %}
+
+<div class="row resource-page">
+{% with panel=request.GET.show_panel %}
+
+    <h1>{{ title }}</h1>
+
+    <dl class="tabs" data-tab>
+      <dd {% if not panel or panel == 'panel-description' %}class="active"{% endif %}>
+        <a href="#panel-description">{% trans "Resource" %}</a>
+      </dd>
+      <dd {% if panel == 'panel-visualization' %}class="active"{% endif %}>
+        <a href="#panel-visualization">{% trans "Visualization" %}</a>
+      </dd>
+      <dd {% if panel == 'panel-download' %}class="active"{% endif %}>
+        <a href="#panel-download">{% trans "Download" %}</a>
+      </dd>
+    </dl>
+
+    <div class="tabs-content">
+
+      <div class="content {% if not panel or panel == 'panel-description' %}active{% endif %}" id="panel-description">
+        <div class="row">
+          <div class="small-2 columns">{% trans "Description" %}</div>
+          <div class="small-10 columns">{{ description | safe }}</div>
+        </div>
+        <div class="row">
+          <div class="small-2 columns">{% trans "Paternity" %}</div>
+          <div class="small-10 columns">{{ paternity }}</div>
+        </div>
+        <div class="row">
+          <div class="small-2 columns">{% trans "External link" %}</div>
+          <div class="small-10 columns"><a href="{{ external_link}}" target="_blank">{% trans "Click to view" %}</a></div>
+        </div>
+        <div class="row">
+          <div class="small-2 columns">{% trans "Updated" %}</div>
+          <div class="small-10 columns">{{ updated }}</div>
+        </div>
+        <div class="row">
+          <div class="small-2 columns">{% trans "Territories" %}</div>
+          <div class="small-10 columns">
+            {% for t in territories %}
+                {{ t }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="small-2 columns">{% trans "Keywords" %}</div>
+          <div class="small-10 columns">
+            {% for k in keywords %}
+                {{ k }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        <div class="row">
+          <div class="small-2 columns">{% trans "Thematics" %}</div>
+          <div class="small-10 columns">
+            {% for t in thematics %}
+                {{ t }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="content {% if panel == 'panel-visualization'  %}active{% endif %}" id="panel-visualization">
+        {% trans "Choose a vizualisation type" %}:
+        {% for v in visualizations %}
+            <a href="{{ v.url }}?show_panel=panel-visualization" title="{{ v.title }}"
+               {% if v.title == current_visualization.title %}class="active"{% endif %}>
+                {{ v.title }}</a>{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+        <div>&nbsp;</div>
+        <p>
+            {{ current_visualization.description | safe }}
+        </p>
+        {% block visualization_resource %}{% endblock visualization_resource %}
+      </div>
+
+      <div class="content {% if panel == 'panel-download' %}active{% endif %}" id="panel-download">
+        <p>
+            <a href="{{ download_url }}">{{ filename }}</a>
+            ({{ size }} KB - {{ download_format }})</p>
+      </div>
+
+    </div>
+
+{% endwith %}
+</div>
+
+{% endblock base_body %}
